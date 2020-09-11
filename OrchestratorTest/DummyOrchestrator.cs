@@ -16,6 +16,17 @@ namespace OrchestratorTest
             [OrchestrationTrigger] IDurableOrchestrationContext context,
             ILogger log)
         {
+            // ver 00
+            var outputs = new List<string>();
+
+            // Replace "hello" with the name of your Durable Activity Function.
+            outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Tokyo"));
+            outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Seattle"));
+            outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "London"));
+
+            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
+            return outputs;
+
             // ver 01
             //var outputs = new List<string>();
             //using TestObject testObject = new TestObject();
@@ -31,25 +42,31 @@ namespace OrchestratorTest
             //return outputs;
 
             // ver 02
-            var outputs = new List<string>();
-            using (TestObject testObject = new TestObject())
-            {
-                // Replace "hello" with the name of your Durable Activity Function.
-                outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Tokyo"));
-                outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Seattle"));
-                outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "London"));
+            //var outputs = new List<string>();
+            //using (TestObject testObject = new TestObject())
+            //{
+            //    // Replace "hello" with the name of your Durable Activity Function.
+            //    outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Tokyo"));
+            //    outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Seattle"));
+            //    outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "London"));
 
-                // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
-                log.LogError("Orchestrator is going to finish");
-            }
+            //    // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
+            //    log.LogError("Orchestrator is going to finish");
+            //}
 
-            return outputs;
+            //return outputs;
         }
 
         [FunctionName("DummyOrchestrator_Hello")]
         public static string SayHello([ActivityTrigger] string name, ILogger log)
         {
-            log.LogInformation($"Saying hello to {name}.");
+            log.LogInformation($"Saying hello to {name} begin");
+            using TestObject testObject = new TestObject();
+            //using (TestObject testObject = new TestObject())
+            //{
+            //}
+            log.LogInformation($"Saying hello to {name} end");
+
             return $"Hello {name}!";
         }
 
