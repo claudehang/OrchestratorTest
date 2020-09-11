@@ -13,16 +13,36 @@ namespace OrchestratorTest
     {
         [FunctionName("DummyOrchestrator")]
         public static async Task<List<string>> RunOrchestrator(
-            [OrchestrationTrigger] IDurableOrchestrationContext context)
+            [OrchestrationTrigger] IDurableOrchestrationContext context,
+            ILogger log)
         {
+            // ver 01
+            //var outputs = new List<string>();
+            //using TestObject testObject = new TestObject();
+
+            //// Replace "hello" with the name of your Durable Activity Function.
+            //outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Tokyo"));
+            //outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Seattle"));
+            //outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "London"));
+
+            //// returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
+            //log.LogError("Orchestrator is going to finish");
+
+            //return outputs;
+
+            // ver 02
             var outputs = new List<string>();
+            using (TestObject testObject = new TestObject())
+            {
+                // Replace "hello" with the name of your Durable Activity Function.
+                outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Tokyo"));
+                outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Seattle"));
+                outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "London"));
 
-            // Replace "hello" with the name of your Durable Activity Function.
-            outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Tokyo"));
-            outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "Seattle"));
-            outputs.Add(await context.CallActivityAsync<string>("DummyOrchestrator_Hello", "London"));
+                // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
+                log.LogError("Orchestrator is going to finish");
+            }
 
-            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
             return outputs;
         }
 
